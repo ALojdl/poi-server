@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>POI Report</title>
+    
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    
+	<script src="//cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="{{ STATIC_URL }}MainApp/jquery.cookie.js"></script>
+	<script src="{{ STATIC_URL }}MainApp/heatmap.min.js"></script>  
+	<script src="{{ STATIC_URL }}MainApp/leaflet-heatmap.js"></script>
+	<script src="{{ STATIC_URL }}MainApp/poi_report.js"></script>
+	
+	
+	<style>
+        body {
+            padding : 0;
+            margin : 0;
+        }
+        html, body {
+        	height : 100%;
+        	width : 100%;
+        }         
+        #map {
+            height : 100%;
+            width : 80%;
+            float : left;
+        }
+        #panel {
+        	height : 100%;
+        	width : 20%;
+        	float : left;
+        	background-color : #111111;
+        }
+        ul{ float : top; height : 100%; padding : 0px; margin : 0px;}
+        ul li { text-align : center; height : 10%;}
+        ul li button {
+        width:100%;
+        height:100%;
+        background : #efefef;
+    	border: 10px;
+        font-family: Tahoma;
+        }
+        button.on{
+        background : #a6a6a6;
+        }
+    </style>
+    
+</head>
+
+<body>
+	<div id = "map"></div>
+	<div id = "panel">
+	<ul id = "list">
+		{% for cat in list_cat %}
+		<li><button data-category = "{{ cat.categoryID }}">{{ cat.name }}</button></li>
+		{% endfor %}
+	</ul>
+	</div>
+	<script>
+		$(document).ready(function(){  
+	    	$('button').click(function(){  
+		        $(this).toggleClass('on');  
+		    });  
+		});
+	</script>
+
+</body>
+</html>
