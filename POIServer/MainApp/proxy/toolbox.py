@@ -4,11 +4,12 @@ import urllib2
 from math import radians, sin, cos, atan2, sqrt, asin, degrees
 
 earth_radius = 6371500  # radius of the earth in meters
-aproximation = 111000   # 1 degree is 111 kilometers
+approximation = 111000   # 1 degree is 111 kilometers
 
 poi_proxy_url = "http://89.216.30.67:55556/es.alrocar.poiproxy.rest"
 
-def distance_between_GPS_coordinates(lat_a, lon_a, lat_b, lon_b):
+
+def distance_between_gps_coordinates(lat_a, lon_a, lat_b, lon_b):
     """
     Calculates the distance in meters between two global positioning service points
     :param lat_a: the latitude of the first point
@@ -24,6 +25,7 @@ def distance_between_GPS_coordinates(lat_a, lon_a, lat_b, lon_b):
 
     return earth_radius * c
 
+
 def translate_coordinates(lat, lon, angle, distance):
     """
     Given a start point, bearing, and distance, function will calculate the destination point. 
@@ -34,14 +36,16 @@ def translate_coordinates(lat, lon, angle, distance):
     :param angle: angle of closest path between start and end point
     :return returns the GPS coordinates of end point
     """
-    bearing =  radians( angle )
+    bearing = radians(angle)
     angular_distance = distance / earth_radius
     rad_lat = radians(lat)
     rad_lon = radians(lon)
-    latitude = asin( sin(rad_lat) * cos(angular_distance) + cos(rad_lat) * sin(angular_distance) * cos(bearing) )
-    longitude = rad_lon + atan2( sin(bearing) * sin(angular_distance) * cos(rad_lat), cos(angular_distance) - sin(rad_lat) * sin(latitude))
+    latitude = asin(sin(rad_lat) * cos(angular_distance) + cos(rad_lat) * sin(angular_distance) * cos(bearing))
+    longitude = rad_lon + atan2(sin(bearing) * sin(angular_distance) * cos(rad_lat), cos(angular_distance)
+                                - sin(rad_lat) * sin(latitude))
     
-    return dict([('lat', degrees(latitude) ), ('lon', degrees(longitude) )])
+    return dict([('lat', degrees(latitude)), ('lon', degrees(longitude))])
+
 
 def translate_coordinates_lightweight(lat, lon, angle, distance):
     """
@@ -53,12 +57,12 @@ def translate_coordinates_lightweight(lat, lon, angle, distance):
     :param angle: angle of closest path between start and end point
     :return returns the GPS coordinates of end point
     """
-    aproximation = 111000
-    angle_radians = radians( angle )
-    aproximated_distance = float(distance) / aproximation
-    latitude = lat + ( sin(angle_radians) * aproximated_distance )
-    longitude = lon + ( cos(angle_radians) * aproximated_distance )
-    return dict([ ('lat', latitude), ('lon', longitude) ])
+    angle_radians = radians(angle)
+    approximated_distance = float(distance) / approximation
+    latitude = lat + (sin(angle_radians) * approximated_distance)
+    longitude = lon + (cos(angle_radians) * approximated_distance)
+    return dict([('lat', latitude), ('lon', longitude)])
+
 
 def get_poi_proxy_server_response(service_request_url):
     """
@@ -71,6 +75,7 @@ def get_poi_proxy_server_response(service_request_url):
         return call.read()
 
     return None
+
 
 def get_available_categories():
 
@@ -92,9 +97,9 @@ def browse_by_tile(service, x, y, z):
     :return: list of Features. Each feature is a dictionary with the following fields : 'geometry' and 'properties'
     geometry is also a dictionary and it has the following fields : coordinates
     coordinates is a list of two points that represent the longitude and latitude of the point
-    properties is a dictionary with the following fields : _content, date_taken, date_upload, image, license, name, owner,
-    owner_name, place_id, px_categories, px_service, url_l, url_m, url_s, url_t, views
-    all these fields are a string
+    properties is a dictionary with the following fields : _content, date_taken, date_upload, image, license, name,
+    owner, owner_name, place_id, px_categories, px_service, url_l, url_m, url_s, url_t, views all these fields are
+    a string.
     """
     request = "/browse?service=%s&z=%d&x=%d&y=%d" % (service, z, y, x)
     raw_data = get_poi_proxy_server_response(request)
@@ -123,6 +128,7 @@ def browse_by_extent(service, min_x, max_x, min_y, max_y):
     
     return json.loads(raw_data)['features']
 
+
 def browse_by_radius(service, lat, lon, radius):
     """
     Browses POI within the radius of a certain point
@@ -133,8 +139,8 @@ def browse_by_radius(service, lat, lon, radius):
     :return: list of Features. Each feature is a dictionary with the following fields : 'geometry' and 'properties'
     geometry is also a dictionary and it has the following fields : coordinates
     coordinates is a list of two points that represent the longitude and latitude of the point
-    properties is a dictionary with the following fields : _content, date_taken, date_upload, image, license, name, owner,
-    owner_name, place_id, px_categories, px_service, url_l, url_m, url_s, url_t, views
+    properties is a dictionary with the following fields : _content, date_taken, date_upload, image, license, name,
+    owner, owner_name, place_id, px_categories, px_service, url_l, url_m, url_s, url_t, views
     all these fields are a string
     """
     request = "/browseByLonLat?service=%s&lon=%f&lat=%f&dist=%f" % (service, lon, lat, radius)
@@ -153,8 +159,8 @@ def search_by_tile(service, x, y, z, search_term):
     :return: list of Features. Each feature is a dictionary with the following fields : 'geometry' and 'properties'
     geometry is also a dictionary and it has the following fields : coordinates
     coordinates is a list of two points that represent the longitude and latitude of the point
-    properties is a dictionary with the following fields : _content, date_taken, date_upload, image, license, name, owner,
-    owner_name, place_id, px_categories, px_service, url_l, url_m, url_s, url_t, views
+    properties is a dictionary with the following fields : _content, date_taken, date_upload, image, license, name,
+    owner, owner_name, place_id, px_categories, px_service, url_l, url_m, url_s, url_t, views
     all these fields are a string
     """
     request = "/browse?service=%s&z=%d&x=%d&y=%d&query=%s" % (service, z, x, y, search_term)
@@ -174,8 +180,8 @@ def search_by_extent(service, min_x, max_x, min_y, max_y, search_term):
     :return: list of Features. Each feature is a dictionary with the following fields : 'geometry' and 'properties'
     geometry is also a dictionary and it has the following fields : coordinates
     coordinates is a list of two points that represent the longitude and latitude of the point
-    properties is a dictionary with the following fields : _content, date_taken, date_upload, image, license, name, owner,
-    owner_name, place_id, px_categories, px_service, url_l, url_m, url_s, url_t, views
+    properties is a dictionary with the following fields : _content, date_taken, date_upload, image, license, name,
+    owner, owner_name, place_id, px_categories, px_service, url_l, url_m, url_s, url_t, views
     all these fields are a string
     """
     request = "/browseByExtent?service=%s&minX=%f&minY=%f&maxX=%f&maxY=%f&query=%s" % \
@@ -195,8 +201,8 @@ def search_by_radius(service, lat, lon, radius, search_term):
     :return: list of Features. Each feature is a dictionary with the following fields : 'geometry' and 'properties'
     geometry is also a dictionary and it has the following fields : coordinates
     coordinates is a list of two points that represent the longitude and latitude of the point
-    properties is a dictionary with the following fields : _content, date_taken, date_upload, image, license, name, owner,
-    owner_name, place_id, px_categories, px_service, url_l, url_m, url_s, url_t, views
+    properties is a dictionary with the following fields : _content, date_taken, date_upload, image, license, name,
+    owner, owner_name, place_id, px_categories, px_service, url_l, url_m, url_s, url_t, views
     all these fields are a string
     """
     request = "/browseByLonLat?service=%s&lon=%f&lat=%f&dist=%f&query=%s" % (service, lat, lon, radius, search_term)

@@ -85,8 +85,12 @@ CORS_ALLOW_METHODS = (
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'POI_DATABASE',
+        'USER': 'usr',
+        'PASSWORD': 'simple_pass',
+        'HOST': 'localhost',
+        'PORT': '13775',
     }
 }
 
@@ -95,7 +99,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC +1'
+TIME_ZONE = 'CET'
 
 USE_I18N = True
 

@@ -89,8 +89,6 @@ $('document').ready(function(){
 			
 		var points = JSON.parse( POI_data );
 		var i;
-		
-		var point = { lat : 0, lon : 0, count : 1 };
 		var test_data = { data : [] };
 		
 		for (i=0; i<points.length; i++) {
